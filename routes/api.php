@@ -2,9 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\Drinks;
-use App\Http\Resources\DrinkResource;
 
+use App\Http\Controllers\API\DrinkController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,8 +14,9 @@ use App\Http\Resources\DrinkResource;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::resource('drink', DrinkController::class);
 
 
-Route::get('/drink', function () {
-    return DrinkResource::collection(Drinks::all());
-});
+//Route::get('/drink', function () {
+//    return DrinkResource::collection(Drinks::all());
+//});

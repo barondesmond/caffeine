@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Drinks;
-use App\Http\Resources\Drink;
 use Illuminate\Http\Request;
+use App\Models\Drinks;
+use App\Http\Resources\DrinkResource;
 
 class DrinkController extends Controller
 {
@@ -16,8 +16,8 @@ class DrinkController extends Controller
      */
     public function index()
     {
-        $resource = new Drinks();
-        return $resource->get()->all();
+        return DrinkResource::collection(Drinks::all());
+
     }
 
     /**
@@ -37,9 +37,10 @@ class DrinkController extends Controller
      * @param  \App\Models\Drinks  $drinks
      * @return \Illuminate\Http\Response
      */
-    public function show(Drinks $drinks)
+    public function show($id, Drinks $drinks)
     {
         //
+        return $drinks::findorfail($id);
     }
 
     /**
@@ -49,9 +50,25 @@ class DrinkController extends Controller
      * @param  \App\Models\Drinks  $drinks
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Drinks $drinks)
+    public function update($id, Request $request, Drinks $drinks)
     {
         //
+        $drink = $drinks::findorfail($id);
+        $consumed = $drink->caffeine * $drink->servings * $request->input('drinks');
+
+        $hasConsumed =  Drinks::sum('consumed');
+        if ($consumed + $hasConsumed > $drinks::$maxConsumed) {
+          //echo "consumed: $consumed and $hasConsumed > $drinks::$maxConsumed";
+          $data['consumed'] = $consumed;
+          $data['has_consumed'] = $hasConsumed;
+          $data['max_consumed'] = $drinks::$maxConsumed;
+          return $data;
+        }
+        $drink->consumed = $consumed + $drink->consumed;
+        $drink->save();
+        $drink->has_consumed = Drinks::sum('consumed');
+        $drink->max_consumed = $drinks::$maxConsumed;
+        return $drink;
     }
 
     /**

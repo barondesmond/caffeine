@@ -20,6 +20,7 @@ class CreateDrinksTable extends Migration
             $table->integer('caffeine');
             $table->integer('servings');
             $table->string('size');
+            $table->integer('consumed');
             $table->timestamps();
         });
     }

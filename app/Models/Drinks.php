@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Drinks extends Model
 {
     use HasFactory;
+    public static $maxConsumed = 500;
+
 }
