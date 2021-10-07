@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Drinks;
 use App\Http\Resources\DrinkResource;
+use App\Http\Requests\DrinkRequest;
 
 class DrinkController extends Controller
 {
@@ -50,7 +51,7 @@ class DrinkController extends Controller
      * @param  \App\Models\Drinks  $drinks
      * @return \Illuminate\Http\Response
      */
-    public function update($id, Request $request, Drinks $drinks)
+    public function update($id, DrinkRequest $request, Drinks $drinks)
     {
         //
         $drink = $drinks::findorfail($id);
