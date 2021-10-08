@@ -56,10 +56,9 @@
               dataType: "json",
               accepts: "application/json",
               success: function(data) {
-                var api = $('#drink').dataTable().api();
-                var meta = api.ajax.json().meta;
-                $('#max_consumed').val('maximum consumed ' + meta.max_consumed);
-                $('#has_consumed').val('has consumed ' + meta.has_consumed);
+
+                $('#max_consumed').val('maximum consumed ' + data.max_consumed);
+                $('#has_consumed').val('has consumed ' + data.has_consumed);
                 table.ajax.reload();
                 if (data.message) {
                   alert('message: ' + data.message + ' on ' + data.consumed);
