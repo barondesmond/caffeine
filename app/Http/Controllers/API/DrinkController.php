@@ -6,7 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Drinks;
 use App\Http\Resources\DrinkResource;
+use App\Http\Resources\DrinkCollection;
 use App\Http\Requests\DrinkRequest;
+use JsonResponse;
+use Illuminate\Validation\ValidationException;
+
+
 
 class DrinkController extends Controller
 {
@@ -17,7 +22,7 @@ class DrinkController extends Controller
      */
     public function index()
     {
-        return DrinkResource::collection(Drinks::all());
+        return new DrinkCollection(Drinks::all());
 
     }
 
@@ -55,19 +60,21 @@ class DrinkController extends Controller
     {
         //
         $drink = $drinks::findorfail($id);
-        $consumed = $drink->caffeine * $drink->servings * $request->input('drinks');
-
+        $caffeine_consumed = $drink->caffeine * $drink->servings * $request->input('drinks');
+        $drinks_consumed = $request->input('drinks') + $drink->drinks;
         $hasConsumed =  Drinks::sum('consumed');
-        if ($consumed + $hasConsumed > $drinks::$maxConsumed) {
-          //echo "consumed: $consumed and $hasConsumed > $drinks::$maxConsumed";
-          $data['consumed'] = $consumed;
-          $data['has_consumed'] = $hasConsumed;
-          $data['max_consumed'] = $drinks::$maxConsumed;
-          return $data;
+        if ($caffeine_consumed + $hasConsumed > $drinks::$maxConsumed) {
+          $drink->message = "max consumption reached";
+          $drink->drinks = $drinks_consumed;
+          $drink->consumed = $caffeine_consumed + $drinks->consumed;
+          $drink->has_consumed = $caffeine_consumed + $hasConsumed;
+          $drink->max_consumed = $drinks::$maxConsumed;
+          return $drink;      
         }
-        $drink->consumed = $consumed + $drink->consumed;
+        $drink->drinks = $drinks_consumed;
+        $drink->consumed = $caffeine_consumed + $drinks->consumed;
         $drink->save();
-        $drink->has_consumed = Drinks::sum('consumed');
+        $drink->has_consumed = $caffeine_consumed + $hasConsumed;
         $drink->max_consumed = $drinks::$maxConsumed;
         return $drink;
     }

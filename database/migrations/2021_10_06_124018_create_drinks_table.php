@@ -21,6 +21,7 @@ class CreateDrinksTable extends Migration
             $table->integer('servings');
             $table->string('size');
             $table->integer('consumed');
+            $table->integer('drinks');
             $table->timestamps();
         });
     }

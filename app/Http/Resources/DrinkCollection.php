@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Models\Drinks;
 
 class DrinkCollection extends ResourceCollection
 {
@@ -15,5 +16,16 @@ class DrinkCollection extends ResourceCollection
     public function toArray($request)
     {
         return parent::toArray($request);
+    }
+
+    public function with($request)
+    {
+        return [
+            'meta' => [
+                'version' => '1.0.2',
+                'max_consumed' => Drinks::$maxConsumed,
+                'has_consumed' => Drinks::sum('consumed'),
+            ],
+        ];
     }
 }
