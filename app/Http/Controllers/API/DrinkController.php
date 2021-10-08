@@ -69,10 +69,10 @@ class DrinkController extends Controller
           $drink->consumed = $caffeine_consumed + $drinks->consumed;
           $drink->has_consumed = $caffeine_consumed + $hasConsumed;
           $drink->max_consumed = $drinks::$maxConsumed;
-          return $drink;      
+          return $drink;
         }
         $drink->drinks = $drinks_consumed;
-        $drink->consumed = $caffeine_consumed + $drinks->consumed;
+        $drink->consumed = $caffeine_consumed + $drink->consumed;
         $drink->save();
         $drink->has_consumed = $caffeine_consumed + $hasConsumed;
         $drink->max_consumed = $drinks::$maxConsumed;
