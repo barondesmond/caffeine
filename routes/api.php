@@ -15,8 +15,3 @@ use App\Http\Controllers\API\DrinkController;
 |
 */
 Route::resource('drink', DrinkController::class);
-
-
-//Route::get('/drink', function () {
-//    return DrinkResource::collection(Drinks::all());
-//});
