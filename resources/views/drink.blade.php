@@ -61,7 +61,6 @@
                 $('#max_consumed').val('maximum consumed ' + meta.max_consumed);
                 $('#has_consumed').val('has consumed ' + meta.has_consumed);
                 table.ajax.reload();
-                console.log(data);
                 if (data.message) {
                   alert('message: ' + data.message + ' on ' + data.consumed);
                 }
